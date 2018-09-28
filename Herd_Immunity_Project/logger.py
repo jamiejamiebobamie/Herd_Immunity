@@ -92,9 +92,9 @@ class Logger(object):
             f.write(str(person._id) + " survived and is now vaccinated!\n")
         f.closed
 
-    def master_stats(self, NumDead, NumSurvived, TotalInfected, NewlyInfected, Uninfected, LivingPop):
+    def master_stats(self, NumDead, NumSurvived, TotalInfected, NewlyInfected, LivingPop):
         with open(self.file_name, "a") as f:
-            f.write("Dead: " + str(NumDead) + " Survived: " + str(NumSurvived) + " Total # Infected by Virus Overall: " + str(TotalInfected)  + " Newly-Infected: " + str(NewlyInfected)  + " Uninfected: " + str(Uninfected)  + " LivingPop: " + str(LivingPop) + "\n")
+            f.write("Deceased by Contagion: " + str(NumDead) + " Survived Contagion: " + str(NumSurvived) + " Total # Infected by Virus Overall: " + str(TotalInfected)  + " Newly-Infected: " + str(NewlyInfected) + " The # of people living: " + str(LivingPop) + "\n")
         f.closed
 #self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), self.uninfected, (len(self.population) - self.dead))
 
