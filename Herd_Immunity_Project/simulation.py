@@ -128,14 +128,15 @@ class Simulation(object):
             time_step_counter += 1
             for person in self.population:
                 if person.infected != None:
-                    if person.did_survive_infection():
+                    if person.did_survive_infection(): #returns a boolean, but also determines if they live/die and switches stats accordingly
                         self.saved += 1
                         self.logger.log_survivor(person)
                     else:
                         self.died += 1
                         self.logger.log_death(person)
+                    self.uninfected -= 1
+            self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), self.uninfected, (len(self.population) - self.died))
             self._infect_newly_infected() #can't come after the kill off infected because the newly-infected would be killed off too
-            #self.logger.master_stats()
             should_continue = self._simulation_should_continue()
         print("The simulation has ended after " + str(time_step_counter) + " turns.")
 
@@ -151,6 +152,8 @@ class Simulation(object):
                         self.logger.log_interaction(self.population[i], target, did_infect, target.is_vaccinated, target.infected)
                         interactions += 1
                         peopleInteractedWith.append(target)
+            elif person.infected == None and person.is_alive == True:
+                self.uninfected += 1
 
     def interaction(self, person, random_person):
         if random_person.is_vaccinated == False and random_person.infected == None:
@@ -158,7 +161,9 @@ class Simulation(object):
             if sick < self.basic_repro_num:
                 self.newly_infected.append(random_person)
                 self.total_infected += 1
-            return True
+                return True
+            else:
+                return False
 
     def _infect_newly_infected(self):
         for sickie in self.newly_infected:

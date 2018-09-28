@@ -84,13 +84,19 @@ class Logger(object):
 
     def log_death(self, person):
         with open(self.file_name, "a") as f:
-            f.write(str(person) + " has died.\n")
+            f.write(str(person._id) + " has died.\n")
         f.closed
 
-    def log_time_survivor(self, person):
+    def log_survivor(self, person):
         with open(self.file_name, "a") as f:
-            f.write(str(person) + " survived and is now vaccinated!\n")
+            f.write(str(person._id) + " survived and is now vaccinated!\n")
         f.closed
+
+    def master_stats(self, NumDead, NumSurvived, TotalInfected, NewlyInfected, Uninfected, LivingPop):
+        with open(self.file_name, "a") as f:
+            f.write("Dead: " + str(NumDead) + " Survived: " + str(NumSurvived) + " Total # Infected by Virus Overall: " + str(TotalInfected)  + " Newly-Infected: " + str(NewlyInfected)  + " Uninfected: " + str(Uninfected)  + " LivingPop: " + str(LivingPop) + "\n")
+        f.closed
+#self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), self.uninfected, (len(self.population) - self.dead))
 
         # NOTE: Stretch challenge opportunity! Modify this method so that at the end of each time
         # step, it also logs a summary of what happened in that time step, including the number of
