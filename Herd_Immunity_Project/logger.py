@@ -62,10 +62,11 @@ class Logger(object):
         with open(self.file_name, "a") as f:
             if did_infect == True:
                 f.write(str(person1._id) +" infects " + str(person2._id) + ".\n")
-            elif did_infect == False and person2_vacc == True:
+            #elif did_infect == False and
+            elif person2_vacc == True:
                 f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is vaccinated.\n")
-            elif did_infect == False and person2_sick == True:
-                f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is sick.\n")
+            elif did_infect == False and person2_sick != None:
+                f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is already infected.\n")
         f.closed
 
     def log_infection_survival(self, person, did_die_from_infection):
@@ -94,7 +95,7 @@ class Logger(object):
 
     def master_stats(self, NumDead, NumSurvived, TotalInfected, NewlyInfected, LivingPop):
         with open(self.file_name, "a") as f:
-            f.write("Deceased by Contagion: " + str(NumDead) + " Survived Contagion: " + str(NumSurvived) + " Total # Infected by Virus Overall: " + str(TotalInfected)  + " Newly-Infected: " + str(NewlyInfected) + " The # of people living: " + str(LivingPop) + "\n")
+            f.write("# Killed by Contagion: " + str(NumDead) + ", # Lived through the Virus: " + str(NumSurvived) + ", Total # Infected by Virus Overall: " + str(TotalInfected)  + ", # Newly-Infected: " + str(NewlyInfected) + ", The # of people living: " + str(LivingPop) + "\n")
         f.closed
 #self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), self.uninfected, (len(self.population) - self.dead))
 

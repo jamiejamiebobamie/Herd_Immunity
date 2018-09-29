@@ -103,6 +103,8 @@ class Simulation(object):
             if infected_count !=  self.initial_infected:
                 population.append(Person(popCounter, False, self.mortality_rate))
                 infected_count += 1
+                self.current_infected += 1
+                self.total_infected += 1
             else:
                 if random.uniform(0,1) < self.vacc_percentage:
                     population.append(Person(popCounter, True, None))
@@ -113,9 +115,10 @@ class Simulation(object):
         return population
 
     def _simulation_should_continue(self):
-        if self.population_size == self.vaccinated + self.died:
-            return False
-        elif self.current_infected == 0:
+        #if self.population_size == self.vaccinated + self.died:
+        #    return False
+        #el
+        if len(self.newly_infected) == 0:
             return False
         else:
             return True
@@ -127,20 +130,22 @@ class Simulation(object):
         while should_continue:
             self.time_step()
             self.logger.log_time_step(time_step_counter)
+            self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
             time_step_counter += 1
             for person in self.population:
                 if person.infected != None:
                     if person.did_survive_infection(): #returns a boolean, but also determines if they live/die and switches stats accordingly
                         self.saved += 1
-                        self.vaccinated +=1
+                        self.vaccinated += 1
                         self.logger.log_survivor(person)
                     else:
                         self.died += 1
                         self.logger.log_death(person)
-            self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
-            self._infect_newly_infected() #can't come after the kill off infected because the newly-infected would be killed off too
+                    self.current_infected -= 1
             should_continue = self._simulation_should_continue()
+            self._infect_newly_infected() #can't come after the kill off infected because the newly-infected would be killed off too, need it come after stats to get newly-infected #
         print("The simulation has ended after " + str(time_step_counter) + " turns.")
+        self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
 
     def time_step(self):
         for i, person in enumerate(self.population):
@@ -149,7 +154,8 @@ class Simulation(object):
                 peopleInteractedWith = []
                 while interactions < 100:
                     target = self.population[random.randint(0, len(self.population)-1)]
-                    if target not in peopleInteractedWith and target.is_alive:
+#                   TALK TO ALAN ABOUT THIS IF STATEMENT.
+                    if target not in peopleInteractedWith and target.is_alive and target not in self.newly_infected:
                         did_infect = self.interaction(self.population[i], target)
                         self.logger.log_interaction(self.population[i], target, did_infect, target.is_vaccinated, target.infected)
                         interactions += 1
@@ -160,14 +166,17 @@ class Simulation(object):
             sick = random.uniform(0,1)
             if sick < self.basic_repro_num:
                 self.newly_infected.append(random_person)
-                self.total_infected += 1
                 return True
             else:
                 return False
+        else:
+            False
 
     def _infect_newly_infected(self):
         for sickie in self.newly_infected:
             sickie.infected = self.mortality_rate
+            self.current_infected += 1
+            self.total_infected += 1
         self.newly_infected = []
 
 #if __name__ == "__main__":
@@ -200,11 +209,11 @@ class Simulation(object):
 
 
 
-pop_size = int(1000)
-vacc_percentage = float(.1)
+pop_size = int(10000)
+vacc_percentage = float(0)
 virus_name = str("Ebola")
-mortality_rate = float(.9)
-basic_repro_num = float(.05)
-initial_infected = 10
+mortality_rate = float(.99)
+basic_repro_num = float(.9)
+initial_infected = 1
 simulation = Simulation(pop_size, vacc_percentage, virus_name, mortality_rate, basic_repro_num, initial_infected)
 simulation.run()
