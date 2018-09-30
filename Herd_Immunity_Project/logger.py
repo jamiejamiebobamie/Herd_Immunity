@@ -52,6 +52,7 @@ class Logger(object):
 
     def __init__(self, file_name):
         self.file_name = file_name
+        self.saved = 0
 
     def write_metadata(self, pop_size, vacc_percentage, virus_name, mortality_rate, basic_repro_num):
         with open(self.file_name, "w+") as f:
@@ -62,10 +63,12 @@ class Logger(object):
         with open(self.file_name, "a") as f:
             if did_infect == True:
                 f.write(str(person1._id) +" infects " + str(person2._id) + ".\n")
-            #elif did_infect == False and
+            elif did_infect == False and person2_vacc != True and person2_sick == None:
+                f.write(str(person1._id) +" does not infect " + str(person2._id) + ".\n")
             elif person2_vacc == True:
                 f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is vaccinated.\n")
-            elif did_infect == False and person2_sick != None:
+                self.saved += 1
+            elif person2_sick != None:
                 f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is already infected.\n")
         f.closed
 
@@ -80,7 +83,7 @@ class Logger(object):
     def log_time_step(self, time_step_number):
         next_time_step = time_step_number + 1
         with open(self.file_name, "a") as f:
-            f.write("Time step " + str(time_step_number) + " ended, beginning time step " + str(next_time_step) + "...\n")
+            f.write("Time step " + str(time_step_number) + " ending, beginning time step " + str(next_time_step) + "...\n")
         f.closed
 
     def log_death(self, person):
@@ -93,9 +96,9 @@ class Logger(object):
             f.write(str(person._id) + " survived and is now vaccinated!\n")
         f.closed
 
-    def master_stats(self, NumDead, NumSurvived, TotalInfected, NewlyInfected, LivingPop):
+    def master_stats(self, NumDead, NumSurvived, TotalVacc, TotalInfected, NewlyInfected, LivingPop):
         with open(self.file_name, "a") as f:
-            f.write("# Killed by Contagion: " + str(NumDead) + ", # Lived through the Virus: " + str(NumSurvived) + ", Total # Infected by Virus Overall: " + str(TotalInfected)  + ", # Newly-Infected: " + str(NewlyInfected) + ", The # of people living: " + str(LivingPop) + "\n")
+            f.write("# Killed by Contagion: " + str(NumDead) + ", # Lived through the Virus: " + str(NumSurvived) + ", # Vaccinated: " + str(TotalVacc)  + ", # of INSTANCES Someone was Saved by being Vaccinated: " + str(self.saved) + ", Total # Infected by Virus Overall: " + str(TotalInfected)  + ", # Newly-Infected: " + str(NewlyInfected) + ", The # of People Living: " + str(LivingPop) + "\n")
         f.closed
 #self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), self.uninfected, (len(self.population) - self.dead))
 

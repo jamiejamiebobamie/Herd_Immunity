@@ -77,7 +77,7 @@ class Simulation(object):
         self.total_infected = 0             #ravaged_pop
         self.current_infected = 0           #endangered_pop
         self.died = 0
-        self.saved = 0
+        self.survived = 0
         self.uninfected = 0
         self.vaccinated = 0
         #len(self.population) - self.dead     #living_pop
@@ -91,7 +91,7 @@ class Simulation(object):
             virus_name, population_size, vacc_percentage, initial_infected)
         self.initial_infected = initial_infected
         self.vacc_percentage = vacc_percentage
-        self.logger = Logger("log")
+        self.logger = Logger("log2")
         self.newly_infected = []
         self.population = self._create_population()
 
@@ -129,13 +129,13 @@ class Simulation(object):
         should_continue = True
         while should_continue:
             self.time_step()
+            self.logger.master_stats(self.died, self.survived, self.vaccinated, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
             self.logger.log_time_step(time_step_counter)
-            self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
             time_step_counter += 1
             for person in self.population:
                 if person.infected != None:
                     if person.did_survive_infection(): #returns a boolean, but also determines if they live/die and switches stats accordingly
-                        self.saved += 1
+                        self.survived += 1
                         self.vaccinated += 1
                         self.logger.log_survivor(person)
                     else:
@@ -145,7 +145,7 @@ class Simulation(object):
             should_continue = self._simulation_should_continue()
             self._infect_newly_infected() #can't come after the kill off infected because the newly-infected would be killed off too, need it come after stats to get newly-infected #
         print("The simulation has ended after " + str(time_step_counter) + " turns.")
-        self.logger.master_stats(self.died, self.saved, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
+        self.logger.master_stats(self.died, self.survived, self.vaccinated, self.total_infected, len(self.newly_infected), (len(self.population) - self.died))
 
     def time_step(self):
         for i, person in enumerate(self.population):
@@ -209,11 +209,11 @@ class Simulation(object):
 
 
 
-pop_size = int(10000)
-vacc_percentage = float(0)
-virus_name = str("Ebola")
-mortality_rate = float(.99)
-basic_repro_num = float(.9)
-initial_infected = 1
+pop_size = int(3000)
+vacc_percentage = float(.01)
+virus_name = "Ebola"
+mortality_rate = float(.7)
+basic_repro_num = float(.023)
+initial_infected = 10
 simulation = Simulation(pop_size, vacc_percentage, virus_name, mortality_rate, basic_repro_num, initial_infected)
 simulation.run()
