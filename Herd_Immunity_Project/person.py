@@ -48,6 +48,11 @@ class Person(object):
 
 
     def did_survive_infection(self):
+        """Gets a random float between 0 and 1. If it is less than the
+        mortality rate of the virus, return False, kill the person and change
+        his infected status to False. If it is greater than the mortality rate
+        of the virus, return True and change the vaccinated attribute to True
+        and the infected status to False."""
         if self.infected != None:
             if random.uniform(0,1) < self.infected:
                 self.is_alive = False

@@ -1,21 +1,21 @@
 "Log"
 1. my inputs were:
-                    3000    0.5    Mumps    0.02    0.123
+                    100000    0.9    Malaria    0.05    0.16    10
 
-2. 1574 out of 3000 people, or 52.4%, had become infected by the virus at some point during the simulation.
+2. 6497 out of 100000 people, or 6.4%, had become infected by the virus at some point during the simulation.
 
-3. 29 out of 3000 people, a little less than 1%, died during the simulation.
+3. 294 out of 100000 people, a little less than .3%, died during the simulation.
 
-4. During a total of 106,189 interactions, people were saved from being infected by the virus, because they had been vaccinated.
+4. During a total of 604,891 interactions, people were saved from being infected by the virus, because they had been vaccinated.
 
 
 
 "Log2"
 1. my inputs were:
-                    3000    0.01    Ebola    0.7    0.023
+                    100000  0.90    Ebola   0.70    0.25    10
 
-2. 2901 out of 3000 people, or 96.7%, had become infected by the virus at some point during the simulation.
+2. 9165 out of 100000 people, or 9.2%, had become infected by the virus at some point during the simulation.
 
-3. 2045 out of 3000 people, or 68.1%, died during the simulation.
+3. 6362 out of 100000 people, or 6.4%, died during the simulation.
 
-4. During a total of 73,105 interactions, people were saved from being infected by the virus, because they had been vaccinated.
+4. During a total of 864,473 interactions, people were saved from being infected by the virus, because they had been vaccinated.

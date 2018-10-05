@@ -72,13 +72,6 @@ class Logger(object):
                 f.write(str(person1._id) + " does not infect " + str(person2._id) + ", because he is already infected.\n")
         f.closed
 
-    def log_infection_survival(self, person, did_die_from_infection):
-        with open(self.file_name, "a") as f:
-            if did_die_from_infection == True:
-                f.write(str(person._id) + "died from infection.\n")
-            else:
-                f.write(str(person._id) + "survived the virus and is now vaccinated!\n")
-        f.closed
 
     def log_time_step(self, time_step_number):
         next_time_step = time_step_number + 1
